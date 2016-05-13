@@ -1,0 +1,70 @@
+#include <iostream>
+using namespace std;
+
+typedef int Data;
+
+struct Node
+{
+	Data data;
+	Node * next;
+};
+
+class Queue
+{
+public:
+	Queue();
+	bool isEmpty();
+	bool inqueu(Data data);
+	Data desQueue();
+private:
+	Node * head;
+	Node * tail;
+};
+
+Data Queue::desQueue(){
+	Node * temp = head;
+	if (head == tail){
+		head = NULL;
+		tail = NULL;
+		return temp->data;
+	}
+	while (temp->next != tail){
+		temp = temp->next;
+	}
+	tail = temp;
+	temp = temp->next;
+	return temp->data;
+}
+
+bool Queue::inqueu(Data data){
+	Node *  temp = new Node;
+	temp->data = data;
+	if (isEmpty()){
+		head = temp;
+		tail = temp;
+		return true;
+	}
+	temp->next = head;
+	head = temp;
+	return true;
+}
+Queue::Queue()
+{
+	head = NULL;
+	tail = NULL;
+}
+
+bool Queue::isEmpty(){
+	if (head == NULL){
+		return true;
+	}
+	return false;
+}
+
+void main(){
+	Queue queue;
+	queue.inqueu(5);
+	cout << queue.desQueue();
+	int x;
+	cin >> x;
+}
