@@ -1,0 +1,83 @@
+#include <iostream>
+using namespace std;
+
+typedef int Data;
+
+struct Node
+{
+	Data data;
+	Node* next;
+};
+
+class LinkedListStack
+{
+public:
+	LinkedListStack(Data data);
+	bool isEmpty();
+	bool push(Data data);
+	Data pop(void);
+private:
+	Node * top = NULL;
+};
+
+LinkedListStack::LinkedListStack(Data data)
+{
+	top = new Node;
+	top->data = data;
+	top->next = NULL;
+}
+
+bool LinkedListStack::isEmpty(){
+	if (top == NULL)
+	{
+		return true;
+	}
+	else{
+		return false;
+	}
+}
+
+bool LinkedListStack::push(Data data){
+	Node * temp = new Node;
+	if (temp == NULL){
+		return false;
+	}
+	temp->data = data;
+	temp->next = top;
+	top = temp;
+	return true;
+}
+
+Data LinkedListStack::pop(void){
+	Node *temp = top;
+	top = top->next;
+	return (temp->data);
+}
+
+void main(){
+
+	//testing 
+	//inserting 5 elements and poping them
+	LinkedListStack stack(50);
+	for (int i = 0; i < 5; i++)
+	{
+		stack.push(50);
+	}
+	while (!stack.isEmpty())
+	{
+		cout << stack.pop();
+	}
+	int x;
+	cin >> x;
+}
+
+
+
+
+
+
+
+
+
+
+
