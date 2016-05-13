@@ -1,0 +1,84 @@
+#include <iostream>
+using namespace std;
+
+typedef int stackDataType;
+
+class ArrayBaasedStack
+{
+public:
+	ArrayBaasedStack(int size);
+	stackDataType pop();
+	bool push(stackDataType x);
+	bool isEmpty();
+	bool isFull();
+private:
+	stackDataType* contents;
+	int top = 0;
+	int size;
+};
+ 
+
+int main(){
+	/* - testing 
+	* inserting 5 elements 
+	* and poping them*/
+	ArrayBaasedStack stack(5);							//creating the stack 
+	stack.push(50);										//inserting one element (50)
+	while (!stack.isFull())								//keep inseting while the stack not full
+	{
+		stack.push(50);
+	}
+	while (!stack.isEmpty())							//keep poping while the stack is not empty 
+	{
+		cout << stack.pop() <<endl;
+	}
+	return 0;
+}
+
+
+ArrayBaasedStack::ArrayBaasedStack(int s)
+{
+	contents = new stackDataType[s];
+	if (contents == NULL){
+		cout << "memory locating problem " << endl;
+		return;
+	}
+	size = s;
+	
+}
+
+
+bool ArrayBaasedStack::push(stackDataType x){
+	if (isFull)
+		return false;
+	contents[top] = x;
+	top++;
+	return true;
+}
+
+stackDataType ArrayBaasedStack::pop(){
+	if (isEmpty)
+		return false;
+	top--;
+	stackDataType x = contents[top];
+	return x;
+}
+
+
+bool ArrayBaasedStack::isEmpty(){
+	if (top == 0){
+		return 1;
+	}
+	else {
+		return 0;
+	}
+}
+
+bool ArrayBaasedStack::isFull(){
+	if (top == size){
+		return 1;
+	}
+	else{
+		return 0;
+	}
+}
