@@ -1,0 +1,63 @@
+#include <iostream>
+using namespace std;
+
+typedef int Data;
+
+class Queue
+{
+public:
+	Queue(int size);
+	bool inqueue(Data data);
+	Data desqueue();
+	bool isEmpty();
+	bool isFull();
+private:
+	Data * contents;
+	int head = 0;
+	int tail = 0;
+	int size = 0;
+	int counter = 0;
+};
+
+Queue::Queue(int Size)
+{
+	contents = new Data[Size];
+	size = Size;
+}
+
+bool Queue::inqueue(Data x)
+{
+	contents[head] = x;
+	head = (head + 1) % size;
+	counter++;
+	return true;
+}
+
+Data Queue::desqueue(){
+	Data temp = contents[tail];
+	tail = (tail + 1) % size;
+	counter++;
+	return temp;
+}
+
+bool Queue::isEmpty(){
+	if (counter == 0){
+		return true;
+	}
+	return false;
+
+}
+
+bool Queue::isFull(){
+	if (counter == size){
+		return true;
+	}
+	return false;
+}
+void main(){
+	//testing
+	Queue queue(5);
+	queue.inqueue(5);
+	cout << queue.desqueue();
+}
+
