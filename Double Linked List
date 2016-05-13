@@ -1,0 +1,330 @@
+#include <iostream>
+
+using namespace std;
+
+//program use double linked list to sort some students according to ID's
+
+
+struct Student {
+    string name;
+    int Id;
+    double gba;
+    int CH ;
+};
+
+typedef Student type;
+
+struct Node {
+    type data;
+    Node *next;
+    Node *prev;
+};
+
+class DoubleLinkedList {
+private :
+    Node* first ;
+    Node* last ;
+    int length ;
+public :
+    DoubleLinkedList(type data);                        //create the linked list and initialize the first element
+    DoubleLinkedList();                                 //create empty linked list
+    bool insertfront(type data);
+    bool insertRear(type data);
+    void deleteDLL();                                   //delete all elements and the linked list
+    bool insertOrderd(type data);                       //insert according to the id
+    void showall();                                     //print the linked list
+    void showAllDwn();                                  //print the linked list from the other direction
+    bool deleteByID(int id);                            //delete one student according to id
+    bool printInfoById(int id);                         //print one student
+    bool serchByValue(string name);
+    bool serchById(int iD);
+};
+Student getstudentData();
+int main()
+{
+    DoubleLinkedList *List = NULL;
+    Student s;
+    bool x=true;
+    while(x){
+        cout<<"what do you want to do ? "<<endl;
+        cout<<"1- create the linked list  "<<endl;
+        cout<<"2- delete all the list "<<endl;
+        cout<<"3- insert an new student  "<<endl;
+        cout<<"4- delete student by Id "<<endl;
+        cout<<"5- show student by id student by Id "<<endl;
+        cout<<"6- show student by id student by name  "<<endl;
+        cout<<"7- show all students "<<endl;
+        cout<<"8- exit"<<endl;
+        int indector ;
+        cin>>indector;
+        int i;
+        string name ;
+        switch(indector){
+        case 1:
+            s=getstudentData();
+            List = new DoubleLinkedList(s);
+            cout<<"done ... !"<<endl;
+
+            break;
+        case 2:
+            List->deleteDLL();
+            cout<<endl;
+            cout<<"done ... !"<<endl;
+            cout<<endl;
+            break;
+        case 3:
+            s=getstudentData();
+            if(List == NULL){
+                cout<<"creat first "<<endl;
+
+            }else if(List->insertOrderd(s)){
+                cout<<endl;
+                cout<<"done ... !"<<endl;
+                cout<<endl;
+            }
+
+            break;
+        case 4:
+
+            cin >>i ;
+            if(List->deleteByID(i))
+                cout<<"Done .. !"<<endl;
+            break;
+        case 5:
+
+            cin >>i ;
+            List->printInfoById(i);
+            break;
+        case 6:
+
+            cin>>name;
+            List->serchByValue(name);
+            break;
+        case 7:
+            List->showall();
+            break;
+        case 8:
+            x=false;
+            break;
+        }
+
+    }
+    return 0;
+}
+
+Student getstudentData(){
+    Student s;
+    cout<<"enter name"<<endl;
+    cin>>s.name;
+    cout<<"enter ID"<<endl;
+    cin>>s.Id;
+    cout<<"enter CGBA"<<endl;
+    cin>>s.gba;
+    cout<<"enter CH"<<endl;
+    cin>>s.CH;
+    return s;
+}
+bool DoubleLinkedList::printInfoById(int id){
+    if(serchById(id)){
+        Node *temp = first;
+        while(temp!=NULL){
+            if(temp->data.Id == id){
+                cout<<temp->data.Id<<"\t"<<temp->data.name<<"\t"<<temp->data.gba<<"\t"<<temp->data.CH<<endl;
+                return 1;
+            }
+            temp=temp->next;
+        }
+    }else{
+        return 0;
+    }
+}
+bool DoubleLinkedList::serchById(int id){
+    Node *temp = first;
+    while(temp!=NULL){
+        if(temp->data.Id==id){
+            return 1 ;
+        }
+        temp=temp->next;
+    }
+    return 0;
+}
+bool DoubleLinkedList::serchByValue(string name){
+    Node *temp = first;
+    while(temp!=NULL){
+        if(temp->data.name==name){
+            printInfoById(temp->data.Id);
+            return 1 ;
+        }
+        temp=temp->next;
+    }
+    return 0;
+}
+bool DoubleLinkedList::deleteByID(int id){
+    if(first==NULL)
+        return 0;
+    Node *t = first;
+    Node *prev=NULL;
+    while(t->next!=NULL){
+        if(t->data.Id==id){
+            break;
+        }
+        prev=t;
+        t=t->next;
+    }
+    if(prev==NULL){
+        deleteDLL();
+        return 1;
+    }
+    prev->next=t->next;
+    t->next->prev=prev;
+    delete t;
+    length--;
+    return 1;
+}
+void DoubleLinkedList::deleteDLL(){
+    Node *temp;
+    temp=first;
+    while (length !=0){
+        temp=first;
+        first=first->next;
+        delete temp;
+        length --;
+    }
+}
+
+bool DoubleLinkedList::insertOrderd(type data){
+    //if empty
+    if(first==NULL){
+        return insertfront(data);
+    }
+    //one node
+    if(first->next==NULL){
+        if(data.Id>first->data.Id){
+            return insertRear(data);
+        }else{
+            return insertfront(data);
+        }
+    }
+
+
+    Node *temp = new Node;
+    temp->data=data;
+
+
+    //two nodes
+    if(first->next->next==NULL){
+        if(data.Id < first->data.Id){
+            return insertfront(data);
+        }else if (data.Id < first->next->data.Id){
+            Node * t = first->next;
+            first->next=temp;
+            temp->next=t;
+            t->prev=temp;
+            temp->prev=first;
+            return 1;
+
+        }else {
+            return insertRear(data);
+        }
+    }
+    //more than two
+    Node *prev = NULL;
+    Node  *temp1 = first;
+    while(temp1->next!=NULL && data.Id > temp1->data.Id){
+        prev= temp1;
+        temp1=temp1->next;
+    }
+    if(prev==NULL){
+        return insertfront(data);
+    }else if(temp1->next == NULL){
+        return insertRear(data);
+    }else {
+        prev->next=temp;
+        temp->next=temp1;
+        temp1->prev=temp;
+        temp->prev=prev;
+        return 1;
+    }
+}
+
+bool DoubleLinkedList::insertfront(type data){
+    if (first == NULL){
+        Node *p=new Node;
+        p->data=data;
+        first=p;
+        last=p;
+        p->next=NULL;
+        p->prev=NULL;
+        length=1;
+        return 1;
+    }
+    Node *p=new Node;
+    p->data=data;
+    p->prev=NULL;
+    p->next=first;
+    first->prev=p;
+    first=p;
+    length++;
+    return 1;
+}
+bool DoubleLinkedList::insertRear(type data){
+    if (first == NULL){
+        Node *p=new Node;
+        p->data=data;
+        first=p;
+        last=p;
+        p->next=NULL;
+        p->prev=NULL;
+        length=1;
+        return 1;
+    }
+    Node *p=new Node;
+    p->data=data;
+    p->next=NULL;
+    p->prev=last;
+    last->next=p;
+    last=p;
+    length++;
+    return 1;
+}
+DoubleLinkedList::DoubleLinkedList(type data){
+    Node * temp = new Node;
+    temp->data=data;
+    length=1;
+    first=temp;
+    last=temp;
+    temp->next=NULL;
+    temp->prev=NULL;
+}
+DoubleLinkedList::DoubleLinkedList(){
+    first=NULL;
+    last=NULL;
+    length=0;
+}
+void DoubleLinkedList::showall(){
+
+    Node * temp = first;
+    while(temp!= NULL){
+
+        cout<<"-----------------------------------------"<<endl;
+        cout<<temp->data.name<<endl;
+        cout<<temp->data.Id<<endl;
+        cout<<temp->data.gba<<endl;
+        cout<<temp->data.CH<<endl;
+        cout<<"-----------------------------------------"<<endl;
+        temp=temp->next;
+    }
+}
+void DoubleLinkedList::showAllDwn(){             //done
+        Node *temp=last;
+
+        while (temp!=NULL){
+            cout<<"-----------------------------------------"<<endl;
+            cout<<temp->data.name<<endl;
+            cout<<temp->data.Id<<endl;
+            cout<<temp->data.gba<<endl;
+            cout<<temp->data.CH<<endl;
+            cout<<"-----------------------------------------"<<endl;
+            temp=temp->prev;
+        }
+    }
