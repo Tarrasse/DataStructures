@@ -1,0 +1,184 @@
+#include<iostream>
+using namespace std;
+typedef int Type;
+
+struct Node
+{
+	Type data;
+	Node * left ;
+	Node * right ;
+};
+
+typedef Node * Tree;
+
+Tree insertOrederd(Tree tree,  Type data);
+int countLeaves(Tree tree);
+bool deleteNode(Tree & tree, Type data);
+int height(Tree tree);
+void inOrder(Tree tree);
+Tree insertOrederd(Tree tree,  Type data);
+bool isIdentical(Tree firstTree, Tree secondTree);
+Tree minTree(Tree tree);
+Tree mirror(Tree tree);
+void PreOrder(Tree tree);
+Tree preOrederSearch(Tree tree, Type data);
+
+
+int  main(){
+	Tree tree = NULL;
+	tree = insertOrederd(tree, 5);
+	tree = insertOrederd(tree, 7);
+	tree = insertOrederd(tree, 3);
+	tree = insertOrederd(tree, 8);
+    tree = insertOrederd(tree, 6);
+    inOrder(tree);
+    cout<<deleteNode(tree,6)<<endl;
+    cout<<"=================================="<<endl;
+    inOrder(tree);
+    return 0;
+}
+
+Tree insertOrederd(Tree tree,  Type data){
+	Tree temp = NULL;
+	if (tree == NULL){
+		temp = new Node;
+		cout << "new node created" << endl;
+		temp->data = data;
+		temp->left = temp->right = NULL;
+		tree = temp;
+	}
+	else if (data < tree->data){
+		tree->left = insertOrederd(tree->left, data);
+	}
+	else{
+		tree->right = insertOrederd(tree->right, data);
+	}
+	return (tree);
+}
+
+void PreOrder(Tree tree){
+	if (tree != NULL){
+		cout << tree->data<<endl;
+		PreOrder(tree->left);
+		PreOrder(tree->right);
+	}
+}
+
+void inOrder(Tree tree){
+	if (tree != NULL){
+		inOrder(tree->left);
+		cout << tree->data<<endl;
+		inOrder(tree->right);
+	}
+}
+
+Tree preOrederSearch(Tree tree, Type data){
+    if(tree = NULL){
+        return tree;
+    }
+    if(tree->data == data){
+        return tree;
+    }
+    if(tree->data < data){
+        return preOrederSearch(tree->left, data);
+    }else{
+        return preOrederSearch(tree->right, data);
+    }
+}
+
+Tree minTree(Tree tree){
+    if(tree==NULL || tree->left == NULL){
+        return tree;
+    }
+    return minTree(tree->left);
+}
+
+int height(Tree tree){
+    if (tree == NULL){
+        return -1;
+    }else{
+        int L = height(tree->left );
+        int R = height(tree->right );
+        if (R>L){
+            return R+1;
+        }else{
+            return L+1;
+        }
+    }
+}
+
+int countLeaves(Tree tree){
+
+    if(tree == NULL){
+        return 0;
+    }
+    if (tree ->left == NULL && tree->right == NULL){
+        return 1;
+    }
+    return (countLeaves(tree->left)+countLeaves(tree->right));
+}
+
+bool isIdentical(Tree firstTree, Tree secondTree){
+
+    if (firstTree == NULL){
+        if(secondTree == NULL)
+            return true;
+        else
+            return false;
+    }
+
+    if (secondTree == NULL){
+        if(firstTree == NULL)
+            return true;
+        else
+            return false;
+    }
+
+    if(firstTree-> data != secondTree->data){
+        return false;
+    }
+
+    return(isIdentical(firstTree->right,secondTree->right) && isIdentical(firstTree->left,secondTree->left));
+}
+
+Tree mirror(Tree tree){
+    if (tree == NULL){
+        return NULL;
+    }
+    Tree newTree = new Node;
+    newTree->data = tree->data;
+    newTree->left = mirror(tree->right);
+    newTree->right = mirror(tree->left);
+    return newTree;
+}
+
+bool deleteNode(Tree & tree, Type data){
+    if (tree == NULL)
+        return false;
+    if(tree->data != data ){
+        return (deleteNode(tree->left, data) || deleteNode(tree->right, data));
+    }else{
+        if(tree->left == NULL && tree->right == NULL){
+            tree = NULL;
+            return true;
+        }
+        else if(tree->left == NULL || tree->right == NULL)
+        {
+            if (tree->left == NULL){
+                tree = tree->right;
+                return true;
+            }else{
+                tree = tree->left;
+                return true;
+            }
+        }
+        else{
+            Tree temp = minTree(tree->right);
+            Type t = temp->data;
+            temp->data = tree->data;
+            tree->data = t;
+            return deleteNode(tree,t);
+        }
+    }
+
+}
