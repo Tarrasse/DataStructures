@@ -177,7 +177,7 @@ bool deleteNode(Tree & tree, Type data){
             Type t = temp->data;
             temp->data = tree->data;
             tree->data = t;
-            return deleteNode(tree,t);
+            return deleteNode(tree,data);
         }
     }
 
